@@ -1,88 +1,25 @@
 import React, { useState, useEffect, useContext } from "react";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-import CreateIcon from "@mui/icons-material/Create";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import MessageIcon from "@mui/icons-material/Message";
+
 import { NavLink, useNavigate } from "react-router-dom";
 import { adddata, deldata, updatedata } from "../context/ContextProvider";
 import Swal from "sweetalert2";
-import Header from "./Header";
-import Sidebar from "./Sidebar";
 import { StudentContext } from "../context/StudentState";
-import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { Link, useParams } from "react-router-dom";
+import Header from "./Header";
 
 export default function Home() {
   let ContextValue = useContext(StudentContext);
 
   document.title = "StudentDashboard - Admin panel";
 
-  const navigation = useNavigate();
   const navigate = useNavigate();
 
-  let sameDateTime = [];
-  let studentData = [];
-
-  const [allStudent, setAllStudent] = useState();
-  const { dltdata, setDLTdata } = useContext(deldata);
-  const { udata, setUdata } = useContext(adddata);
-  const { updata, setUPdata } = useContext(updatedata);
-  const [totalStudent, setTotalStudent] = useState();
-  const [newStudent, setNewStudent] = useState();
-  const [pastSevenStudent, setPastSevenStudent] = useState();
-  const [processBar, setProcessBar] = useState();
   // const [searchQuery, setSearchQuery] = useState();
-  const [allStudentData, setAllStudentData] = useState();
-  const [start, setStart] = useState(0);
-  const [end, setEnd] = useState(20);
-  const [totalItem, setTotalItem] = useState();
-  const [currentTrainer, setCurrentTrainer] = useState();
-  const [user, setUser] = useState("student");
-  const [currentStudent, setCurrentStudent] = useState();
-  const [counselor, setCounselor] = useState();
-  const [total, setTotal] = useState();
-  const [newTotal, setNewTotal] = useState();
-  const [totalAmount, setTotalAmount] = useState();
-  const [totalrunningBatch, setTotalRunningBatch] = useState();
   const [register, setRegister] = useState();
-  const [currentRegister, setCurrentRegister] = useState();
-  const [allDemo, setAllDemo] = useState();
-  const [newDemo, setNewDemo] = useState();
-  const [demoList, setDemoList] = useState();
-  const [demoStudentData, setDemoStudentData] = useState();
-  const [allDemoList, setAllDemoList] = useState();
-  const [newDemoStudentData, setNewDemoStudentData] = useState();
-  const [newDemoList, setNewDemoList] = useState();
-  const [upcomingDemoList, setUpcomingDemoList] = useState();
-  const [upcomingDemoStudent, setUpcomingDemoStudent] = useState();
   const [allCourse, setAllCourse] = useState();
   const [allCourseLength, setAllCourseLength] = useState();
   const [course, setCourse] = useState();
-  const [weekDaysBatch, setWeekDaysbatch] = useState();
-  const [weekEndBatch, setWeekEndBatch] = useState();
-
-  //All Trainer
-  let tempCurrentStudent;
-  const [getuserdata, setUserdata] = useState("");
-  console.log("trainer");
-  const getTrainerdata = async () => {
-    const res = await fetch("http://localhost:8000/trainer", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const data = await res.json();
-    console.log("trainer data =", data);
-    if (res.status === 422 || !data) {
-      console.log("error ");
-    } else {
-      setUserdata(data);
-      setCurrentTrainer(data);
-      localStorage.setItem("allTrainer", JSON.stringify(data));
-    }
-  };
+  const [currentRegisterdata, setCurrentRegister] = useState()
 
   const getAllCourses = async () => {
     console.log("all course function");
@@ -99,44 +36,6 @@ export default function Home() {
     ContextValue.updateBarStatus(false);
   };
 
-  // async function fetchAdminStatus() {
-  //   ContextValue.updateProgress(30);
-  //   ContextValue.updateBarStatus(true);
-  //   try {
-  //     const status = await ContextValue.checkAdmin();
-
-  //     console.log("status of admin =", status);
-  //     if (status.status === "active") {
-  //       getdata();
-  //       getTrainerdata();
-  //       getCounselorData();
-  //       getTotalStudent();
-  //       getNewStudent();
-  //       getTotalFees();
-  //       getRunningBatch();
-  //       getRegisteredStudent();
-  //       getAllDemo();
-  //       getNewDemo();
-  //       getAllBatches();
-  //       getUpcomingDemo();
-       
-  //     } else {
-  //       navigation("/");
-  //       // alert("you are not authorized");
-  //       ContextValue.updateProgress(100);
-  //       ContextValue.updateBarStatus(false);
-  //     }
-  //   } catch (error) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Oops...",
-  //       text: "Something went Wrong Try Again",
-  //     });
-  //     ContextValue.updateProgress(100);
-  //     ContextValue.updateBarStatus(false);
-  //     console.error("Error fetching admin status:", error);
-  //   }
-  // }
 
   useEffect(() => {
     // fetchAdminStatus();
@@ -157,158 +56,21 @@ export default function Home() {
   }
  
 
-  const showMessagedialog = async (id) => {
-    const { value: text } = await Swal.fire({
-      input: "textarea",
-      inputLabel: "Message",
-      inputPlaceholder: "Type your message here...",
-      inputAttributes: {
-        "aria-label": "Type your message here",
-      },
-      showCancelButton: true,
-    });
-
-    if (text) {
-      Swal.fire(text);
-    }
-
-    let checkId = [{ id }];
-
-    let sendData = await fetch("http://localhost:8000/sendmessage", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text, checkid: checkId, from: "admin" }),
-    });
-
-    let fetchData = await sendData.json();
-  };
-
-
-
-  //sweetalert
-
-  //Delete student
-
-
- 
- 
   //search
-  const fetchQueryData = (Query) => {
-    if (user === "student") {
-      let filterQueryData = allStudentData.filter((data) => {
-        return (
-          data.Name.toLowerCase().includes(Query.toLowerCase()) ||
-          data.EnrollmentNo.toLowerCase().includes(Query.toLowerCase())
-        );
-      });
-      setCurrentStudent(filterQueryData);
-    }
-    if (user === "register") {
-      let filterRegisterData = register.filter((data) => {
-        return (
-          data.Name.toLowerCase().includes(Query.toLowerCase()) ||
-          data.RegistrationNo.toLowerCase().includes(Query.toLowerCase())
-        );
-      });
-
-      setCurrentRegister(filterRegisterData);
-    }
-
-    if (user === "trainer") {
-      let filterTrainerData = getuserdata.filter((data) => {
-        return (
-          data.Name.toLowerCase().includes(Query.toLowerCase()) ||
-          data.code.toLowerCase().includes(Query.toLowerCase())
-        );
-      });
-      setCurrentTrainer(filterTrainerData);
-    }
-    if (user === "counselor") {
-      let filterCounselorData = counselor.filter((data) => {
-        return (
-          data.Name.toLowerCase().includes(Query.toLowerCase()) ||
-          data.counselorNo.toLowerCase().includes(Query.toLowerCase())
-        );
-      });
-      setCounselor(filterCounselorData);
-    }
-  };
-
-  const badgeStatus = {
-    pending: "warning",
-    backout: "dark",
-    deactive: "danger",
-    active: "success",
-  };
-  const registerStatus = {
-    Process: "warning",
-    Added: "success",
-    BackOut: "dark",
-  };
-
-  const moveToEditTrainer = (trainer) => {
-    navigate("/EditTrainer", { state: { trainer } });
-  };
-  const moveToEditCounselor = (counselor) => {
-    navigate("/EditCounselor", { state: { counselor } });
-  };
-  const moveToCounselor = (counselor) => {
-    navigate("/AboutCounselor", { state: { counselor } });
-  };
-
-  const moveToViewFee = () => {
-    navigate("ViewFee", { state: { fee: totalAmount } });
-  };
-
-  const moveToAddRegisteredStudent = (data) => {
-    navigate("Add-Registered-Student", { state: { data } });
-  };
-
-  const moveToRegisterStudent = () => {
+   const moveToRegisterStudent = () => {
     navigate("Registered-Student", { state: { registerStudent: register } });
   };
   const moveToAddStudent = () => {
     navigate("Add-Registered-Student");
-  };
-
- 
-
- 
-  const moveToAllDemo = () => {
-    navigate("All-Demo", {
-      state: { demoList: allDemoList, demoStudentData, status: "demo" },
-    });
-  };
-  const moveToNewDemo = () => {
-    navigate("New-Demo", {
-      state: { demoList: newDemoList, demoStudentData: newDemoStudentData },
-    });
-  };
-
-  const moveToUpcomingDemo = () => {
-    navigate("upcomingDemo", {
-      state: { demo: upcomingDemoList, demoStudent: upcomingDemoStudent },
-    });
-  };
+  }; 
 
   const moveToAllCourses = () => {
     navigate("AllCourse", { state: { course: course, allCourse: allCourse } });
   };
-  const moveToAddCourses = () => {
-    navigate("AddCounselor");
-  };
-  const moveToAllBatchTiming = () => {
-    navigate("AllBatchTiming", {
-      state: { weekDays: weekDaysBatch, weekEnd: weekEndBatch },
-    });
-  };
 
-  const moveToStudentAttendance = (batch, id) => {
-    navigate("fullattendance", { state: { id: id, batch: batch } });
-  };
   return (
     <>
-      <Header />
+      <Header/>
       <div className="sidebar-main-container">
         {/* <Sidebar /> */}
         <div className="content-body">

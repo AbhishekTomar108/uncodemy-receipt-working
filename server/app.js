@@ -1,14 +1,12 @@
 const express = require("express");
 const app = express();
 const dbConnect = require("./db/conn");
-const users = require("./models/userSchema");
 const cors = require("cors");
 const router = require("./routes/router");
 const bodyParser = require('body-parser');
 
 
 dbConnect()
-
 
 
 app.use(bodyParser.json());

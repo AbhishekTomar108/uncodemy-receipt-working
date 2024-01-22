@@ -1,8 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react'
 import man from "../Components/img/testimonial-2.jpg"
 import { Link, useNavigate, useLocation  } from 'react-router-dom'
-import Header from '../Components/Header'
-import Sidebar from '../Components/Sidebar'
 import { StudentContext } from '../context/StudentState';
 import AddIcCallIcon from '@mui/icons-material/AddIcCall';
 import CreateIcon from '@mui/icons-material/Create';
@@ -11,7 +9,7 @@ import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import Swal from 'sweetalert2'
 
 // import Home from '../Components/Home'
-// import Header from '../Components/Header'
+import Header from '../Components/Header'
 
 export default function RegisterStudent(props) {
 

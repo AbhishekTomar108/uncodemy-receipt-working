@@ -1,10 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import Sidebar from '../Components/Sidebar';
-import Header from '../Components/Header';
 import Swal from 'sweetalert2'
 import CreateIcon from '@mui/icons-material/Create';
 import { StudentContext } from '../context/StudentState';
+import Header from '../Components/Header';
 
 
 export default function AddRegisteredStudent
@@ -44,9 +43,7 @@ export default function AddRegisteredStudent
     fetchAllBatchCourse();
     fetchRunningBatch();
     fetchAllCounselor();
-    getAllCourse();
-    getTotalRegistartionCourse(data)
-    
+    getAllCourse();    
     // setUpdateEditStatusFunc();
 
   }, [])
@@ -56,14 +53,6 @@ export default function AddRegisteredStudent
     console.log("course =", allCourse, allCourse.courses);
     setCourse(allCourse.allCourse);
     setAllCourse(allCourse.courses);
-  };
-
-  const getTotalRegistartionCourse = async (data) => {
-    let matchCourse = await ContextValue.getTotalRegistrationStatus(data);
-
-    console.log('course match status =',matchCourse)
-    setDeleteStatus(matchCourse.status)
-
   };
 
   const fetchAllCounselor = async () => {
@@ -506,7 +495,7 @@ export default function AddRegisteredStudent
 
   return (
     <>
-      <Header />
+    <Header/>
       <div className='sidebar-main-container'>
       <div className="content-body">
         <div className="container-fluid">

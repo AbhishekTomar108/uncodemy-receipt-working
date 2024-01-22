@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useState } from 'react'
 import { Link, useNavigate, useLocation  } from 'react-router-dom'
 import Header from './Header'
-import Sidebar from './Sidebar'
 import { StudentContext } from '../context/StudentState';
 import Swal from 'sweetalert2'
 

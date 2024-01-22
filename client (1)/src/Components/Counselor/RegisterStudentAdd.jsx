@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { StudentContext } from "../../context/StudentState";
-import Cslidebar from "./Cslidebar";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import Header from "../Header";
 import Swal from "sweetalert2";
 import { HashLoader } from "react-spinners";
+import Header from "../Header";
 
 const RegisterStudentAdd = () => {
   let navigate = useNavigate();
@@ -254,7 +253,7 @@ const RegisterStudentAdd = () => {
 
   return (
     <>
-      <Header />
+      <Header/>
       <div className="sidebar-main-container">
         <HashLoader color="#3c84b1" />
         {/* <Cslidebar /> */}

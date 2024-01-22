@@ -1,6 +1,4 @@
 import React, { useEffect, useState, useContext } from "react";
-import Sidebar from "./Sidebar";
-import Header from "./Header";
 import { StudentContext } from '../context/StudentState';
 
 const RegisteredStudent = () => {
