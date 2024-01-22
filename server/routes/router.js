@@ -9,7 +9,7 @@ const controller = require("../controller/file.controller");
 
 const uploads = require("../models/teachermodal");
 const totalRegistration = require("../models/TotalRegistrationNo");
-const totalRegistrationdev = require("../models/totalRegistrationdev");
+// const totalRegistrationdev = require("../models/TotalRegistrationDev");
 
 const bodyParser = require('body-parser');
 var jwt = require("jsonwebtoken");
