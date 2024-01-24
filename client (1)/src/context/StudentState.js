@@ -80,19 +80,7 @@ const StudentState = (props) => {
     setAllCounselor(allCounselor)
     return allCounselor
   }
-  const getAllTrainer = async () => {
-    let allTrainer = await fetch("http://localhost:8000/trainer", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      }
-    });
-
-    allTrainer = await allTrainer.json()
-    return allTrainer
-  }
-
-  
+ 
 
   const getRegisterStudent = async()=>{
    
@@ -130,7 +118,7 @@ const StudentState = (props) => {
   
   return (
     <div>
-      <StudentContext.Provider value={{getRegisterStudent:getRegisterStudent, getAllTrainer:getAllTrainer,getAllCounselor:getAllCounselor, getAllMainSubCourse:getAllMainSubCourse, updateProgress:updateProgress,updateBarStatus:updateBarStatus,SuccessMsg:SuccessMsg,progress:progress,barStatus:barStatus}}>
+      <StudentContext.Provider value={{getRegisterStudent:getRegisterStudent,getAllCounselor:getAllCounselor, getAllMainSubCourse:getAllMainSubCourse, updateProgress:updateProgress,updateBarStatus:updateBarStatus,SuccessMsg:SuccessMsg,progress:progress,barStatus:barStatus}}>
         {props.children}
       </StudentContext.Provider>
     </div>

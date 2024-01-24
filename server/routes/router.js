@@ -31,7 +31,7 @@ const jwt_secret = "uuu"
 
 router.post("/google-sheet-data",async(req,res) =>{
 
-    const beforeMemoryUsage = process.memoryUsage();
+ 
 
     try{
     const serviceAccountAuth = new JWT({
@@ -51,7 +51,7 @@ router.post("/google-sheet-data",async(req,res) =>{
     const sheet = doc.sheetsByIndex[0];
    
       
-      console.log(doc.title);
+      // console.log(doc.title);
       await doc.updateProperties({ title: 'Admission Details 2024' });
 
       const HEADERS = ['Enrollment_Id','Counselor_Name','Student_Name','Email_ID','Contact_No', 'Course_Name','Total_Amount','Registation_Amount','Date_of_Reg','Expected_Batch_Allocation','Batch_Allocation','Payment_Method','Total_Installment','Batch_Mode','Remark']
@@ -96,28 +96,28 @@ router.post("/google-sheet-data",async(req,res) =>{
         }
     }
 
-    console.log('row count =',usedRowCount)
+    // console.log('row count =',usedRowCount)
 
     let updateRegister = await registerStudentDev.updateOne({RegistrationNo:req.body.RegistrationNo},{index:usedRowCount})
 
     // Find the added row based on some criteria (for example, Enrollment_Id)
-    const addedRow = sheet.getRows({ offset: 1, limit: 1, query: 'Enrollment_Id = ' + req.body.RegistrationNo })[0];
+    const addedRow = await sheet.getRows({ offset: 1, limit: 1, query: 'Enrollment_Id = ' + req.body.RegistrationNo });
 
     if (addedRow) {
-      const addedRowId = addedRow._rowNumber; // This is the row number, you can use it as an ID
-      console.log('Added row ID:', addedRowId);
-      res.json({ "status": true, "id": addedRowId });
+      // This is the row number, you can use it as an ID
+      // console.log('Added row ID:', addedRowId);
+      res.json({ "status": true });
     } else {
       res.json({ "status": false });
     }
 
     const afterMemoryUsage = process.memoryUsage();
 
-        console.log(`Memory before operation google-sheet  route: ${beforeMemoryUsage.heapUsed / 1024 / 1024} MB`);
-        console.log(`Memory after operation  google-sheet route: ${afterMemoryUsage.heapUsed / 1024 / 1024} MB`);
+        // console.log(`Memory before operation google-sheet  route: ${beforeMemoryUsage.heapUsed / 1024 / 1024} MB`);
+        // console.log(`Memory after operation  google-sheet route: ${afterMemoryUsage.heapUsed / 1024 / 1024} MB`);
   } catch (error) {
+      console.log('error google-sheet =', error.message);
     res.json({ "status": false });
-    console.log('error =', error.message);
   }
     
 
@@ -125,7 +125,7 @@ router.post("/google-sheet-data",async(req,res) =>{
 
 router.post("/updateRegisterStudent", async (req, res) => {
     
-    // console.log("register route =", req.body)
+    // // console.log("register route =", req.body)
     try {
     const totalMonthRegistration = await totalRegistration.find({"month":req.body.month,"year":req.body.year})
     const StudentByRegistration = await totalRegistration.findOne({"RegistrationNo":req.body.RegistrationNo})
@@ -134,27 +134,34 @@ router.post("/updateRegisterStudent", async (req, res) => {
      let oldRegistrationNo = req.body.RegistrationNo
 
         const updateRegistration = await updateRegisterNo(totalMonthRegistration,Student,req.body,StudentByRegistration)
-        console.log('update registration',updateRegistration)
+        // console.log('update registration',updateRegistration)
         req.body.RegistrationNo = updateRegistration
-        req.body.RemainingFees = req.body.CourseFees - req.body.RegistrationFees
+        
+        if(req.body.PaymentMethod==="OTP"){
+            req.body.RemainingFees="0" 
+        }
+        else{
+    
+            req.body.RemainingFees = req.body.CourseFees - req.body.RegistrationFees
+        }
     
 
-       console.log('update total register =',oldRegistrationNo)
+       // console.log('update total register =',oldRegistrationNo)
         const savedUser = await registerStudentDev.updateOne({RegistrationNo:oldRegistrationNo},req.body)
         const data = await registerStudentDev.findOne({RegistrationNo:req.body.RegistrationNo})
         req.body.oldRegistrationNo = oldRegistrationNo;      
             
        
         res.status(200).json(req.body);
-        console.log('updated register student =',savedUser,data)
+        // console.log('updated register student =',savedUser,data)
     } catch (error) {
-        console.log(error.message);
+        console.log("update register =",error.message);
         res.status(500).json({ error: "Something went wrong" });
     }
 });
 
 router.post("/update-google-sheet-data", async (req, res) => {
-    console.log('update google =', req.body);
+    // console.log('update google =', req.body);
   
     try {
       const serviceAccountAuth = new JWT({
@@ -177,11 +184,11 @@ router.post("/update-google-sheet-data", async (req, res) => {
         limit: 1,
       });
 
-      console.log('rows =',rows)
+      // console.log('rows =',rows)
   
       if (rows.length > 0) {
         const existingRow = rows[0];
-        console.log('Existing row =', req.body.oldRegistrationNo, existingRow);
+        // console.log('Existing row =', req.body.oldRegistrationNo, existingRow);
   
         existingRow.Enrollment_Id = req.body.RegistrationNo;
         existingRow.Counselor_Name = req.body.Counselor;
@@ -201,7 +208,7 @@ router.post("/update-google-sheet-data", async (req, res) => {
         existingRow.Total_Installment = req.body.totalInstallment;
   
         await existingRow.save();
-        console.log('Row updated successfully');
+        // console.log('Row updated successfully');
       } else {
         let data = {
           Enrollment_Id: req.body.RegistrationNo,
@@ -222,12 +229,12 @@ router.post("/update-google-sheet-data", async (req, res) => {
         };
   
         await sheet.addRow(data);
-        console.log('Row added successfully');
+        // console.log('Row added successfully');
       }
   
       res.json({ "status": true });
     } catch (error) {
-      console.log('Error:', error.message);
+      console.log('update google-sheet Error:', error.message);
       res.json({ "status": false, "error": error.message });
     }
   });
@@ -250,7 +257,7 @@ router.post("/update-google-sheet-data", async (req, res) => {
         const sheet = doc.sheetsByIndex[0];
         let index = parseInt(req.body.index)
 
-        console.log('req body =',req.body)
+        // console.log('req body =',req.body)
 
         // Assume you want to update the values in the first row of "Sheet2"
         await sheet.loadCells();
@@ -299,78 +306,9 @@ router.post("/update-google-sheet-data", async (req, res) => {
 
   
 
-// end of google-sheet
-
-// add Student route
-
-//function to generate enrollment 
-
-const generateEnrollment = (student, data)=>{
-    console.log('generate enrollment =', data)
-    let course = '';
-    let splitCourse = data.Course.split(' ')
-    if (splitCourse.length > 1) {
-        splitCourse.map(data => {
-            course = `${course}${data[0]}`
-        })
-    }
-
-    else {
-        course = splitCourse[0]
-    }
-    let newEnrollment;
-    let year = data.BatchStartDate.split('-')[0]
-    let month = data.BatchStartDate.split('-')[1]
-    if(student){
-            
-    let count = parseInt(student.EnrollmentNo.split('/')[2].split('-')[1]);
-    count = count+1
-    count = count.toString().padStart(2, '0')
-    
-    newEnrollment = `UC${year}/${course}/${month}-${count}`
-    console.log('enrollment no =',newEnrollment)
-
-        }
-        else{
-            newEnrollment = `UC${year}/${course}/${month}-01`
-        }
-
-    return newEnrollment
-}
-
-// function to generate counselor Enrollment
-
-const generateCounselorNo = (counselor,counselorName)=>{
-
-    
-    let newEnrollment;
-    let year = new Date().getFullYear()
-    let month =  (new Date().getMonth()+1)
-    month = month<10?`0${month}`:month
-    const shortName = counselorName.substring(0, 3).toUpperCase();
-
-    if(counselor){
-            
-    let count = parseInt(counselor.counselorNo.split('/')[2].split('-')[1]);
-    count = count+1
-    count = count.toString().padStart(2, '0')
-    
-    newEnrollment = `UC${year}/${shortName}/${month}-${count}`
-    console.log('enrollment no =',newEnrollment)
-    
-
-        }
-        else{
-            newEnrollment = `UC${year}/${shortName}/${month}-01`
-        }
-
-    return newEnrollment
-}
-
-
 router.get('/allSubMainCourse',async(req,res)=>{  
     
-    // console.log("all sub main course func =")
+    // // console.log("all sub main course func =")
     let allCourse = await subCourse.find()
 
     let courses =[]
@@ -403,21 +341,27 @@ router.post("/registerStudent", async (req, res) => {
     
     newRegistration = generateRegisterNo(totalRegistrationNo,req.body)
     req.body.RegistrationNo = newRegistration
-    req.body.RemainingFees = req.body.CourseFees - req.body.RegistrationFees
+    if(req.body.PaymentMethod==="OTP"){
+        req.body.RemainingFees="0" 
+    }
+    else{
+
+        req.body.RemainingFees = req.body.CourseFees - req.body.RegistrationFees
+    }
     req.body.index = "";
 
    
         const savedUser = await registerStudentDev.create(req.body);
-        console.log('saved user =',savedUser)
+        // console.log('saved user =',savedUser)
         const addRegistrationNo = await totalRegistration.create(req.body)
 
         const afterMemoryUsage = process.memoryUsage();
 
-        console.log(`Memory before operation add register route: ${beforeMemoryUsage.heapUsed / 1024 / 1024} MB`);
-        console.log(`Memory after operation add register route: ${afterMemoryUsage.heapUsed / 1024 / 1024} MB`);
+        // console.log(`Memory before operation add register route: ${beforeMemoryUsage.heapUsed / 1024 / 1024} MB`);
+        // console.log(`Memory after operation add register route: ${afterMemoryUsage.heapUsed / 1024 / 1024} MB`);
         res.status(200).json(savedUser);
     } catch (error) {
-        console.log(error.message);
+        console.log("error register student =",error.message);
         res.status(500).json({ error: "Something went wrong" });
     }
 });
@@ -428,7 +372,7 @@ const generateRegisterNo = (monthStudent, data) => {
 
     try
     {
-     // console.log("data of student =",data)
+     // // console.log("data of student =",data)
         let course = data.courseCode;
         let newStudentCourse = data.Course
  
@@ -458,7 +402,7 @@ const generateRegisterNo = (monthStudent, data) => {
      return registrationNo;}
  
      catch(error){
-         console.log("error =",error.message)
+         // console.log("error =",error.message)
          res.status(500).json({ error: "Something went wrong" });
      }
  };
@@ -469,7 +413,7 @@ const generateRegisterNo = (monthStudent, data) => {
 const updateRegisterNo = async(totalMonthRegistration,Student,data,StudentByRegistration) => {
    
     try {
-      console.log("update register =", data,Student)
+      // console.log("update register =", data,Student)
   
   
       let oldRegistartion = data.RegistrationNo;
@@ -492,12 +436,12 @@ const updateRegisterNo = async(totalMonthRegistration,Student,data,StudentByRegi
   
       totalOldCourse = totalOldCourse.length>10?totalOldCourse.length:`0${totalOldCourse.length}`
       totalNewCourse = (totalNewCourse.length+1)>10?(totalNewCourse.length+1):`0${(totalNewCourse.length+1)}`
-      console.log('courseCount =',courseCount,totalOldCourse,StudentByRegistration)
+      // console.log('courseCount =',courseCount,totalOldCourse,StudentByRegistration)
   
       if(parseInt(courseCount)==totalOldCourse){
   
           newRegistrationNo = `UC${year}/${newCourseCode}-${data.counselorReference}/${month}-${totalNewCourse}`;
-          console.log('registration new =',newRegistrationNo)
+          // console.log('registration new =',newRegistrationNo)
           data.RegistrationNo = newRegistrationNo
   
           let updateTotalRegister = await totalRegistration.updateOne({_id:StudentByRegistration._id},data)
@@ -511,13 +455,13 @@ const updateRegisterNo = async(totalMonthRegistration,Student,data,StudentByRegi
   
               if(oldCourseCode===newCourseCode){
   
-                  console.log('code is same =',newCourseCode,data.counselorReference)
+                  // console.log('code is same =',newCourseCode,data.counselorReference)
   
                   newRegistrationNo = `UC${year}/${newCourseCode}-${data.counselorReference}/${month}-${courseCount}`;
               }
   
               else{
-                  console.log('code is not same =',oldCourseCode,newCourseCode,data.counselorReference)
+                  // console.log('code is not same =',oldCourseCode,newCourseCode,data.counselorReference)
               newRegistrationNo = `UC${year}/${oldCourseCode}-${newCourseCode}-${data.counselorReference}/${month}-${courseCount}`;
   
               }
@@ -539,7 +483,7 @@ const updateRegisterNo = async(totalMonthRegistration,Student,data,StudentByRegi
   
       else{
           let count = 1
-          console.log("count",count)
+          // console.log("count",count)
   
           totalMonthRegistration.map(data=>{
               if(data.Course===newCourse){
@@ -550,7 +494,7 @@ const updateRegisterNo = async(totalMonthRegistration,Student,data,StudentByRegi
           count = count>10?count:`0${count}`
   
           if(oldCourseCode===newCourseCode){
-              console.log('month is not same =',newCourseCode,data.counselorReference)
+              // console.log('month is not same =',newCourseCode,data.counselorReference)
   
               newRegistrationNo = `UC${year}/${newCourseCode}-${data.counselorReference}/${month}-${count}`;
           }
@@ -566,7 +510,7 @@ const updateRegisterNo = async(totalMonthRegistration,Student,data,StudentByRegi
       }
   
       else{
-          console.log('registration no. else =')
+          // console.log('registration no. else =')
           newRegistrationNo = `UC${year}/${newCourse}-${data.counselorReference}/${month}-01`;
   
       }
@@ -576,7 +520,7 @@ const updateRegisterNo = async(totalMonthRegistration,Student,data,StudentByRegi
   }
   
    catch(error){
-      console.log("error =",error.message)
+      // console.log("error =",error.message)
       res.status(500).json({ error: "Something went wrong" });
    }
   };
@@ -589,69 +533,10 @@ router.get("/getregisterStudent", async (req, res) => {
         const userdata = await registerStudentDev.find();
         res.status(200).json(userdata);
     } catch (error) {
-        console.log('error =', error.message)
+        console.log('error get register=', error.message)
         res.status(500).json(error);
     }
 });
-
-
-
-
-
-
-
-//Get by student upload item url vide
-
-// Trainer profile
-router.get("/trainer", async (req, res) => {
-    console.log('trainer =', req.body)
-
-    try {
-        const trainers = await uploads.find({});
-        // console.log("data =",trainers)
-        res.send(trainers)
-    }
-    catch (error) {
-        console.log('error =', error.message)
-        res.send({ "error": error.message })
-    }
-
-});
-
-
-// Login router for Trainer
-
-router.post("/trainer", async (req, res) => {
-
-    try {
-        const email = req.body.email;
-        const password = req.body.password;
-
-        const username = await uploads.findOne({ Email: email, Password: password }).lean();
-
-
-        if (username) {
-
-            const data = {
-                user: {
-                    id: username._id
-                },
-            }
-
-            delete username.password;
-            // // console.log('trim user =', username)
-            const authtoken = await jwt.sign(data, jwt_secret)
-            res.send({ "status": "active", "authtoken": authtoken, "username": username })
-        }
-
-        else {
-            res.send({ "status": "false" })
-        }
-
-    } catch (error) {
-        res.status(404).send({ "invalid ": error.message })
-    }
-})
 
 // route to get all counselor data
 
@@ -661,6 +546,7 @@ router.get('/getAllCounselor', async (req, res) => {
         res.send({ "status": "active", "counselorData": counselorData })
     }
     catch (error) {
+        console.log("get counselor error =",error.message)
         res.send({ "status": "error" })
 
     }

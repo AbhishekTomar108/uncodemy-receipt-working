@@ -33,12 +33,10 @@ export default function AddRegisteredStudent
   const [registrationDateStatus, setRegistrationDateStatus] = useState(false)
   const [batchJoinStatus, setBatchJoinStatus] = useState(false)
   const [selectedRunningBatch, setSelectedRunningBatch] = useState()
-  const [trainer, setTrainer] = useState('')
   const [counselor, setCouselor] = useState()
   const [editStatus, setEditStatus] = useState([true, true, true, true, true, true, true, true, true, true, true, true, true, true, true])
   let counselorData = {}
-  let trainerData   = {}
-
+  
   useEffect(() => {
     fetchAllBatchCourse();
     fetchRunningBatch();
@@ -356,26 +354,7 @@ export default function AddRegisteredStudent
   })
 }
 
- 
-  const setBatch = async (name, value) => {
-
-    setINP({ ...inpval, [name]: value })
-
-    let tempTrainer = selectedRunningBatch.filter(data => {
-      return data.Batch === value ? data : false
-    })
-    setTrainer(tempTrainer[0].Trainer)
-    console.log("temp trainer =",tempTrainer)
-
-    let tempInpval = { ...inpval }
-    tempInpval.TrainerName = tempTrainer[0].Trainer
-    tempInpval.BatchTiming = tempTrainer[0].BatchTime
-    tempInpval.Batch = tempTrainer[0].Batch
-    tempInpval.TrainerID = tempTrainer[0].TrainerID
-    setINP(tempInpval)
-  }
-
-  const setCounselor = (name)=>{
+   const setCounselor = (name)=>{
     let tempInpval = { ...inpval }
     tempInpval.Counselor = name
     tempInpval.CounselorID = counselorData[name]

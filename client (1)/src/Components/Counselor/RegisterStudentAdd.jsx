@@ -9,7 +9,6 @@ const RegisterStudentAdd = () => {
   let navigate = useNavigate();
 
   const [allcourse, setAllCourse] = useState();
-  const [trainer, setTrainer] = useState();
   const [course, setCourse] = useState();
   const [methodStatus, setMethodStatus] = useState();
   const [allFieldStatus, setAllFieldStatus] = useState(false);
@@ -21,7 +20,6 @@ const RegisterStudentAdd = () => {
 
   useEffect(() => {
     getAllCourse();
-    getTrainer();
     getCounselor();
   }, []);
 
@@ -179,30 +177,7 @@ const RegisterStudentAdd = () => {
     setINP(tempInpVal);
   };
 
-  let trainerData = {};
-
-  const getTrainer = async () => {
-    const trainerData = await ContextValue.getAllTrainer();
-    console.log("trainer data =", trainerData);
-    setTrainer(trainerData);
-  };
-
-  const setTrainerData = (e) => {
-    console.log(
-      "trainer data =",
-      e.target.selectedIndex,
-      trainerData[e.target.selectedIndex],
-      trainerData
-    );
-    setINP({
-      ...inpval,
-      [e.target.name]: e.target.value,
-      ["TrainerId"]: trainer[e.target.selectedIndex - 1].code,
-    });
-
-    const status = isAllFieldsFilled();
-    setAllFieldStatus(status);
-  };
+ 
 
   const setMainCourse = (subCourse) => {
     let mainCourse;
