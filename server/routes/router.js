@@ -7,7 +7,7 @@ const app = express();
 
 const uploads = require("../models/teachermodal");
 const totalRegistration = require("../models/TotalRegistrationNo");
-// const totalRegistrationdev = require("../models/TotalRegistrationDev");
+const totalRegistrationdev = require("../models/TotalRegistrationDev");
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
