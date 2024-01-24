@@ -47,7 +47,7 @@ router.post("/google-sheet-data",async(req,res) =>{
    
       
       // console.log(doc.title);
-      await doc.updateProperties({ title: 'Admission Details 2024 Sheet 2' });
+      await doc.updateProperties({ title: 'Admission Details 2024' });
 
       const HEADERS = ['Enrollment_Id','Counselor_Name','Student_Name','Email_ID','Contact_No', 'Course_Name','Total_Amount','Registation_Amount','Date_of_Reg','Expected_Batch_Allocation','Batch_Allocation','Payment_Method','Total_Installment','Batch_Mode','Remark']
       await sheet.setHeaderRow(HEADERS)
