@@ -10,10 +10,8 @@ const totalRegistration = require("../models/TotalRegistrationNo");
 // const totalRegistrationdev = require("../models/TotalRegistrationDev");
 
 const bodyParser = require('body-parser');
-var jwt = require("jsonwebtoken");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-const fs = require("fs");
 
 const subCourse = require("../models/Subcourse");
 const registerStudent = require("../models/RegisteredStudent");
@@ -23,9 +21,6 @@ const counselors = require("../models/Counselor")
 // const uploadfiles = require('../models/UploadedItem')
 const options = { stats: true }
 const { JWT } = require('google-auth-library');
-
-
-const jwt_secret = "uuu"
 
 
 router.post("/google-sheet-data",async(req,res) =>{
