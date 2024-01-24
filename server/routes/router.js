@@ -40,7 +40,7 @@ router.post("/google-sheet-data",async(req,res) =>{
       });
 
     // const doc = new GoogleSpreadsheet('1Uyn8D87__CUhM0m08kpS63cD2nbw7DI6j3bVUkWZm_4', serviceAccountAuth);
-    const doc = new GoogleSpreadsheet('1_PMdmi3cd24bTEt3IVANPUvMxYQCQ8t-0zxNSOOF_JU', serviceAccountAuth);
+    const doc = new GoogleSpreadsheet('1IHrELX5TbjxsJaqxD6sYihoG7l70vKJxA5e4Cvu9gGs', serviceAccountAuth);
 
     await doc.loadInfo(); // loads document properties and worksheets
     const sheet = doc.sheetsByIndex[0];
@@ -159,7 +159,7 @@ router.post("/update-google-sheet-data", async (req, res) => {
         scopes: ['https://www.googleapis.com/auth/spreadsheets'],
       });
   
-      const doc = new GoogleSpreadsheet('1_PMdmi3cd24bTEt3IVANPUvMxYQCQ8t-0zxNSOOF_JU', serviceAccountAuth);
+      const doc = new GoogleSpreadsheet('1IHrELX5TbjxsJaqxD6sYihoG7l70vKJxA5e4Cvu9gGs', serviceAccountAuth);
   
       await doc.loadInfo(); // loads document properties and worksheets
       const sheet = doc.sheetsByIndex[0];
@@ -239,7 +239,7 @@ router.post("/update-google-sheet-data", async (req, res) => {
             scopes: ['https://www.googleapis.com/auth/spreadsheets'],
         });
 
-        const doc = new GoogleSpreadsheet('1_PMdmi3cd24bTEt3IVANPUvMxYQCQ8t-0zxNSOOF_JU', serviceAccountAuth);
+        const doc = new GoogleSpreadsheet('1IHrELX5TbjxsJaqxD6sYihoG7l70vKJxA5e4Cvu9gGs', serviceAccountAuth);
 
         await doc.loadInfo(); // loads document properties and worksheets
 
