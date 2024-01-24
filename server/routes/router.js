@@ -40,7 +40,7 @@ router.post("/google-sheet-data",async(req,res) =>{
       });
 
     // const doc = new GoogleSpreadsheet('1Uyn8D87__CUhM0m08kpS63cD2nbw7DI6j3bVUkWZm_4', serviceAccountAuth);
-    const doc = new GoogleSpreadsheet('1IHrELX5TbjxsJaqxD6sYihoG7l70vKJxA5e4Cvu9gGs', serviceAccountAuth);
+    const doc = new GoogleSpreadsheet('1_PMdmi3cd24bTEt3IVANPUvMxYQCQ8t-0zxNSOOF_JU', serviceAccountAuth);
 
     await doc.loadInfo(); // loads document properties and worksheets
     const sheet = doc.sheetsByIndex[0];
@@ -93,7 +93,7 @@ router.post("/google-sheet-data",async(req,res) =>{
 
     // console.log('row count =',usedRowCount)
 
-    let updateRegister = await registerStudentDev2.updateOne({RegistrationNo:req.body.RegistrationNo},{index:usedRowCount})
+    let updateRegister = await registerStudentDev.updateOne({RegistrationNo:req.body.RegistrationNo},{index:usedRowCount})
 
     // Find the added row based on some criteria (for example, Enrollment_Id)
     const addedRow = await sheet.getRows({ offset: 1, limit: 1, query: 'Enrollment_Id = ' + req.body.RegistrationNo });
@@ -122,9 +122,9 @@ router.post("/updateRegisterStudent", async (req, res) => {
     
     // // console.log("register route =", req.body)
     try {
-    const totalMonthRegistration = await totalRegistrationdev.find({"month":req.body.month,"year":req.body.year})
-    const StudentByRegistration = await totalRegistrationdev.findOne({"RegistrationNo":req.body.RegistrationNo})
-    const Student = await registerStudentDev2.findOne({"RegistrationNo":req.body.RegistrationNo})
+    const totalMonthRegistration = await totalRegistration.find({"month":req.body.month,"year":req.body.year})
+    const StudentByRegistration = await totalRegistration.findOne({"RegistrationNo":req.body.RegistrationNo})
+    const Student = await registerStudentDev.findOne({"RegistrationNo":req.body.RegistrationNo})
 
      let oldRegistrationNo = req.body.RegistrationNo
 
@@ -136,8 +136,8 @@ router.post("/updateRegisterStudent", async (req, res) => {
     
 
        // console.log('update total register =',oldRegistrationNo)
-        const savedUser = await registerStudentDev2.updateOne({RegistrationNo:oldRegistrationNo},req.body)
-        const data = await registerStudentDev2.findOne({RegistrationNo:req.body.RegistrationNo})
+        const savedUser = await registerStudentDev.updateOne({RegistrationNo:oldRegistrationNo},req.body)
+        const data = await registerStudentDev.findOne({RegistrationNo:req.body.RegistrationNo})
         req.body.oldRegistrationNo = oldRegistrationNo;      
             
        
@@ -159,7 +159,7 @@ router.post("/update-google-sheet-data", async (req, res) => {
         scopes: ['https://www.googleapis.com/auth/spreadsheets'],
       });
   
-      const doc = new GoogleSpreadsheet('1IHrELX5TbjxsJaqxD6sYihoG7l70vKJxA5e4Cvu9gGs', serviceAccountAuth);
+      const doc = new GoogleSpreadsheet('1_PMdmi3cd24bTEt3IVANPUvMxYQCQ8t-0zxNSOOF_JU', serviceAccountAuth);
   
       await doc.loadInfo(); // loads document properties and worksheets
       const sheet = doc.sheetsByIndex[0];
@@ -239,7 +239,7 @@ router.post("/update-google-sheet-data", async (req, res) => {
             scopes: ['https://www.googleapis.com/auth/spreadsheets'],
         });
 
-        const doc = new GoogleSpreadsheet('1IHrELX5TbjxsJaqxD6sYihoG7l70vKJxA5e4Cvu9gGs', serviceAccountAuth);
+        const doc = new GoogleSpreadsheet('1_PMdmi3cd24bTEt3IVANPUvMxYQCQ8t-0zxNSOOF_JU', serviceAccountAuth);
 
         await doc.loadInfo(); // loads document properties and worksheets
 
@@ -321,9 +321,9 @@ router.get('/allSubMainCourse',async(req,res)=>{
 
 router.post("/registerStudent", async (req, res) => {
     const beforeMemoryUsage = process.memoryUsage();
-      // const lastStudent = await registerStudentDev2.findOne({}, {}, { sort: { _id: -1 } }).exec();
+      // const lastStudent = await registerStudentDev.findOne({}, {}, { sort: { _id: -1 } }).exec();
       try {
-    const totalRegistrationNo = await totalRegistrationdev.find({"month":req.body.month,"year":req.body.year})
+    const totalRegistrationNo = await totalRegistration.find({"month":req.body.month,"year":req.body.year})
 
 
     let newRegistration;
@@ -334,9 +334,9 @@ router.post("/registerStudent", async (req, res) => {
     req.body.index = "";
 
    
-        const savedUser = await registerStudentDev2.create(req.body);
+        const savedUser = await registerStudentDev.create(req.body);
         // console.log('saved user =',savedUser)
-        const addRegistrationNo = await totalRegistrationdev.create(req.body)
+        const addRegistrationNo = await totalRegistration.create(req.body)
 
         const afterMemoryUsage = process.memoryUsage();
 
@@ -414,8 +414,8 @@ const updateRegisterNo = async(totalMonthRegistration,Student,data,StudentByRegi
       let month = data.month;
   
   
-      let totalOldCourse = await totalRegistrationdev.find({"Course":oldCourse,"month":data.month,"year":data.year})
-      let totalNewCourse = await totalRegistrationdev.find({"Course":newCourse,"month":data.month,"year":data.year})
+      let totalOldCourse = await totalRegistration.find({"Course":oldCourse,"month":data.month,"year":data.year})
+      let totalNewCourse = await totalRegistration.find({"Course":newCourse,"month":data.month,"year":data.year})
   
       totalOldCourse = totalOldCourse.length>10?totalOldCourse.length:`0${totalOldCourse.length}`
       totalNewCourse = (totalNewCourse.length+1)>10?(totalNewCourse.length+1):`0${(totalNewCourse.length+1)}`
@@ -427,7 +427,7 @@ const updateRegisterNo = async(totalMonthRegistration,Student,data,StudentByRegi
           // console.log('registration new =',newRegistrationNo)
           data.RegistrationNo = newRegistrationNo
   
-          let updateTotalRegister = await totalRegistrationdev.updateOne({_id:StudentByRegistration._id},data)
+          let updateTotalRegister = await totalRegistration.updateOne({_id:StudentByRegistration._id},data)
   
       }
   
@@ -459,7 +459,7 @@ const updateRegisterNo = async(totalMonthRegistration,Student,data,StudentByRegi
               count = count>10?count:`0${count}`
               newRegistrationNo = `UC${year}/${oldCourseCode}-${newCourseCode}-${data.counselorReference}/${month}-${count}`;
               data.RegistrationNo = newRegistrationNo
-              let addtotalRegister  = await totalRegistrationdev.create(data)
+              let addtotalRegister  = await totalRegistration.create(data)
   
           }
       }
@@ -484,7 +484,7 @@ const updateRegisterNo = async(totalMonthRegistration,Student,data,StudentByRegi
           else{
               newRegistrationNo = `UC${year}/${oldCourseCode}-${newCourseCode}-${data.counselorReference}/${month}-${count}`;
               data.RegistrationNo = newRegistrationNo
-              let addtotalRegister  =await totalRegistrationdev.create(data)
+              let addtotalRegister  =await totalRegistration.create(data)
   
           }
   
@@ -513,7 +513,7 @@ const updateRegisterNo = async(totalMonthRegistration,Student,data,StudentByRegi
 
 router.get("/getregisterStudent", async (req, res) => {
     try {
-        const userdata = await registerStudentDev2.find();
+        const userdata = await registerStudentDev.find();
         res.status(200).json(userdata);
     } catch (error) {
         console.log('error get register=', error.message)
