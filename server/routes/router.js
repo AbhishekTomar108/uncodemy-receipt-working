@@ -4,8 +4,6 @@ const express = require("express");
 const mongoose = require('mongoose')
 const router = express.Router();
 const app = express();
-const uploadFile = require("../middleware/upload");
-const controller = require("../controller/file.controller");
 
 const uploads = require("../models/teachermodal");
 const totalRegistration = require("../models/TotalRegistrationNo");
