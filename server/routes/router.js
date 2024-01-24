@@ -132,13 +132,7 @@ router.post("/updateRegisterStudent", async (req, res) => {
         // console.log('update registration',updateRegistration)
         req.body.RegistrationNo = updateRegistration
         
-        if(req.body.PaymentMethod==="OTP"){
-            req.body.RemainingFees="0" 
-        }
-        else{
-    
-            req.body.RemainingFees = req.body.CourseFees - req.body.RegistrationFees
-        }
+       req.body.RemainingFees = req.body.CourseFees - req.body.RegistrationFees
     
 
        // console.log('update total register =',oldRegistrationNo)
@@ -336,13 +330,7 @@ router.post("/registerStudent", async (req, res) => {
     
     newRegistration = generateRegisterNo(totalRegistrationNo,req.body)
     req.body.RegistrationNo = newRegistration
-    if(req.body.PaymentMethod==="OTP"){
-        req.body.RemainingFees="0" 
-    }
-    else{
-
-        req.body.RemainingFees = req.body.CourseFees - req.body.RegistrationFees
-    }
+   req.body.RemainingFees = req.body.CourseFees - req.body.RegistrationFees
     req.body.index = "";
 
    
