@@ -43,11 +43,11 @@ router.post("/google-sheet-data",async(req,res) =>{
     const doc = new GoogleSpreadsheet('1_PMdmi3cd24bTEt3IVANPUvMxYQCQ8t-0zxNSOOF_JU', serviceAccountAuth);
 
     await doc.loadInfo(); // loads document properties and worksheets
-    const sheet = doc.sheetsByIndex[0];
+    const sheet = doc.sheetsByIndex[1];
    
       
       // console.log(doc.title);
-      await doc.updateProperties({ title: 'Admission Details 2024' });
+      await doc.updateProperties({ title: 'Admission Details 2024 Sheet 2' });
 
       const HEADERS = ['Enrollment_Id','Counselor_Name','Student_Name','Email_ID','Contact_No', 'Course_Name','Total_Amount','Registation_Amount','Date_of_Reg','Expected_Batch_Allocation','Batch_Allocation','Payment_Method','Total_Installment','Batch_Mode','Remark']
       await sheet.setHeaderRow(HEADERS)
@@ -162,7 +162,7 @@ router.post("/update-google-sheet-data", async (req, res) => {
       const doc = new GoogleSpreadsheet('1_PMdmi3cd24bTEt3IVANPUvMxYQCQ8t-0zxNSOOF_JU', serviceAccountAuth);
   
       await doc.loadInfo(); // loads document properties and worksheets
-      const sheet = doc.sheetsByIndex[0];
+      const sheet = doc.sheetsByIndex[1];
   
     //   const rows = await sheet.getRows({
     //     query: `Enrollment_Id = '${req.body.oldRegistrationNo}'`
@@ -243,7 +243,7 @@ router.post("/update-google-sheet-data", async (req, res) => {
 
         await doc.loadInfo(); // loads document properties and worksheets
 
-        const sheet = doc.sheetsByIndex[0];
+        const sheet = doc.sheetsByIndex[1];
         let index = parseInt(req.body.index)
 
         // console.log('req body =',req.body)
