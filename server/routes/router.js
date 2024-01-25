@@ -98,6 +98,7 @@ router.post("/google-sheet-data",async(req,res) =>{
     // Find the added row based on some criteria (for example, Enrollment_Id)
     const addedRow = await sheet.getRows({ offset: 1, limit: 1, query: 'Enrollment_Id = ' + req.body.RegistrationNo });
 
+     console.log("added row =",addedRow)
     if (addedRow) {
       // This is the row number, you can use it as an ID
       // console.log('Added row ID:', addedRowId);
