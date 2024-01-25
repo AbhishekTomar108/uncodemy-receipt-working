@@ -43,7 +43,7 @@ router.post("/google-sheet-data",async(req,res) =>{
     const doc = new GoogleSpreadsheet('1_PMdmi3cd24bTEt3IVANPUvMxYQCQ8t-0zxNSOOF_JU', serviceAccountAuth);
 
     await doc.loadInfo(); // loads document properties and worksheets
-    const sheet = doc.sheetsByIndex[1];
+    const sheet = doc.sheetsByIndex[0];
    
       
       // console.log(doc.title);
@@ -163,7 +163,7 @@ router.post("/update-google-sheet-data", async (req, res) => {
       const doc = new GoogleSpreadsheet('1_PMdmi3cd24bTEt3IVANPUvMxYQCQ8t-0zxNSOOF_JU', serviceAccountAuth);
   
       await doc.loadInfo(); // loads document properties and worksheets
-      const sheet = doc.sheetsByIndex[1];
+      const sheet = doc.sheetsByIndex[0];
   
     //   const rows = await sheet.getRows({
     //     query: `Enrollment_Id = '${req.body.oldRegistrationNo}'`
@@ -244,7 +244,7 @@ router.post("/update-google-sheet-data", async (req, res) => {
 
         await doc.loadInfo(); // loads document properties and worksheets
 
-        const sheet = doc.sheetsByIndex[1];
+        const sheet = doc.sheetsByIndex[0];
         let index = parseInt(req.body.index)
 
         // console.log('req body =',req.body)
